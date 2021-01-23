@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Famous Computer Zone{% endblock title %}
+
+{% block content %}
+
+    {% for product in products %}
+        <h3><a href="{{product.get_absolute_url}}">{{product.name}}</a></h3>
+        <img src="{{ product.img.url }}" alt="{{product.slug}}">
+        <p><b> {{product.price}}</b></p>
+    {% endfor %}
+    {% include "fcz/pagination.html" with page=products %}
+{% endblock content %}

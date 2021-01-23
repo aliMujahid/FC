@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{%load bootstrap4%}
+{% block title %}{{product.name}}{% endblock title %}
+{% block content %}
+    <h1>{{product.name}}</h1>
+    <img src="{{product.img.url}}" alt="{{product.slug}}">
+    <h2>Price:{{product.price}}TK</h2>
+    <h3>Description:</h3>
+    <p>{{product.description}}</p>
+    <table class="table table-hover table-bordered">
+        {% for ft in features %}
+        <tr><td>{{ft.ft_name}}</td><td>{{ft.ft_value}}</td></tr>
+        {% endfor %}
+    </table>
+    <h3>Warranty:</h3>
+    {{product.warranty}}
+{% endblock content %}
