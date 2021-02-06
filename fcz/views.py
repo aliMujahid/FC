@@ -3,10 +3,23 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from taggit.models import Tag
 
-from .models import Product
+from .models import Product, Categorie
 
 def index(request):
-    obj_list = Product.objects.filter(status='in_stock')
+    categs = Categorie.objects.all()
+    all_products = Product.objects.filter(status='in_stock')
+    products = {}
+    for categ in categs:
+        tag = get_object_or_404(Tag, slug=categ.slug)
+        products[categ.title]=all_products.filter(tags__in=[tag])
+
+    context = {'products':products}
+    return render(request, 'fcz/index.html', context)
+
+def category(request, categ):
+    obj_list = Product.objects.filter(status='in_stock')    
+    tag = get_object_or_404(Tag, slug=categ)
+    obj_list = obj_list.filter(tags__in=[tag])
     paginator = Paginator(obj_list, 3)
     page = request.GET.get('page')
     try:
@@ -18,7 +31,7 @@ def index(request):
     
     context = {'products':products}
 
-    return render(request, 'fcz/index.html', context)
+    return render(request, 'fcz/category.html', context)
 
 
 def product_detail(request, day, month, year, product):
@@ -30,11 +43,3 @@ def product_detail(request, day, month, year, product):
 
     context = {'product':product, "features":features}
     return render(request, 'fcz/product_detail.html', context)
-
-def category(request, categ):
-    product_list = Product.objects.filter(status='in_stock')
-    tag = get_object_or_404(Tag, slug=categ)
-    product_list = product_list.filter(tags__in=[tag])
-
-    context = {'products':product_list}
-    return render(request, 'fcz/index.html', context)

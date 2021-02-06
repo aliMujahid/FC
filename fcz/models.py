@@ -53,3 +53,16 @@ class Categorie(models.Model):
     def __str__(self):
         return self.title
  
+class Subcategory(models.Model):
+    category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
+    title= models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50)
+    
+    class Meta:
+        verbose_name_plural = 'Subcategories'
+    
+    def __str__(self):
+        return self.title
+
+    
+    

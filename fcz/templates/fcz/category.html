@@ -5,13 +5,10 @@
 
 {% block content %}
 
-    {% for key, value in products.items %}
-        <h1>{{key}}</h1>
-        {% for product in value %}
-            <h3><a href="{{product.get_absolute_url}}">{{product.name}}</a></h3>
+    {% for product in products %}
+        <h3><a href="{{product.get_absolute_url}}">{{product.name}}</a></h3>
         <img src="{{ product.img.url }}" alt="{{product.slug}}">
         <p><b> {{product.price}}</b></p>
-        {% endfor %}
     {% endfor %}
-    
+    {% include "fcz/pagination.html" with page=products %}
 {% endblock content %}
