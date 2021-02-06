@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+from taggit.models import Tag
+
 from .models import Product
 
 def index(request):
@@ -10,9 +12,9 @@ def index(request):
     try:
         products = paginator.page(page)
     except EmptyPage:
-        products = paginator.page(1)
-    except PageNotAnInteger:
         products = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        products = paginator.page(1)
     
     context = {'products':products}
 
@@ -28,3 +30,11 @@ def product_detail(request, day, month, year, product):
 
     context = {'product':product, "features":features}
     return render(request, 'fcz/product_detail.html', context)
+
+def category(request, categ):
+    product_list = Product.objects.filter(status='in_stock')
+    tag = get_object_or_404(Tag, slug=categ)
+    product_list = product_list.filter(tags__in=[tag])
+
+    context = {'products':product_list}
+    return render(request, 'fcz/index.html', context)

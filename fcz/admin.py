@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Product, Feature
+from .models import Product, Feature, Categorie
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -14,3 +14,8 @@ class ProductAdmin(admin.ModelAdmin):
 class FeatureAdmin(admin.ModelAdmin):
     list_display = ('ft_name', 'ft_value')
     list_filter = ('product',)
+
+@admin.register(Categorie)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    prepopulated_fields = {'slug':('title',)}

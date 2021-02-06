@@ -10,8 +10,23 @@
     </head>
 
     <body>
-        <nav class="navbar bg-light navbar-expand-md mb-4 border">
-            <a href="#" class="navbar-brand" >Famous Computer Zone</a>
+        <nav class="navbar bg-primary navbar-dark navbar-expand-md mb-4 border">
+            <a href="{% url 'fcz:index' %}" class="navbar-brand" >Famous Computer Zone</a>
+            <button class="navbar-toggler" type="button"
+             data-toggle="collapse" data-target="#collapse_target"
+             aria-expanded="false" aria-controls="collapse_target"
+             aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="collapse_target">
+                
+                <ul class="navbar-nav mr-auto">
+                    {% for categ in categories %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'fcz:category' categ.slug %}">{{categ.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </nav>
 
         {% block content %}
