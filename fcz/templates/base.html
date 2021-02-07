@@ -7,6 +7,12 @@
         {% bootstrap_css %}
         {% bootstrap_javascript jquery="full" %}
         <title> {% block title %}{% endblock title %} </title>
+        <style>
+            .navbar .nav-item .dropdown-menu{ display: none; }
+	        .navbar .nav-item:hover .nav-link{ color: #fff;  }
+	        .navbar .nav-item:hover .dropdown-menu{ display: block; }
+	        .navbar .nav-item .dropdown-menu{ margin-top:0; }
+        </style>
     </head>
 
     <body>
@@ -22,8 +28,24 @@
             <div class="collapse navbar-collapse" id="collapse_target">
                 
                 <ul class="navbar-nav mr-auto">
-                    {% for categ in categories %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'fcz:category' categ.slug %}">{{categ.title}}</a></li>
+                    {% for categ, subcateg in categories.items %}
+                        {% if subcateg %}
+                            <li class="nav-item dropdown">
+                            <a class="nav-link" id="navbardrop"
+                            href="{% url 'fcz:category' categ.slug %}"> {{categ.title}}</a>
+                            <div class="dropdown-menu">
+                            {% for item in subcateg %}
+                                <a class="dropdown-item" 
+                                href="{% url 'fcz:sub_category' categ.slug item.slug %}">
+                                {{item.title}}</a>
+                            {% endfor %}
+                            </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" 
+                        href="{% url 'fcz:category' categ.slug %}">
+                        {{categ.title}}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>

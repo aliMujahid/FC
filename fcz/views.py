@@ -16,10 +16,15 @@ def index(request):
     context = {'products':products}
     return render(request, 'fcz/index.html', context)
 
-def category(request, categ):
+def category(request, categ, sub_categ=None):
     obj_list = Product.objects.filter(status='in_stock')    
     tag = get_object_or_404(Tag, slug=categ)
     obj_list = obj_list.filter(tags__in=[tag])
+    
+    if sub_categ:
+        tag = get_object_or_404(Tag, slug=sub_categ)
+
+        obj_list = obj_list.filter(tags__in=[tag])
     paginator = Paginator(obj_list, 3)
     page = request.GET.get('page')
     try:
