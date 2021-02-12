@@ -3,6 +3,11 @@ from django.urls import reverse
 
 from taggit.managers import TaggableManager 
 
+class InstockManager(models.Manager):
+    def get_queryset(self):
+        return super(InstockManager, self).get_queryset()\
+                        .filter(status='in_stock')
+
 class Product(models.Model):
     
     STATUS_CHOICE = (
@@ -22,6 +27,9 @@ class Product(models.Model):
     update = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=15, default='in_stock',\
                                  choices=STATUS_CHOICE)
+
+    objects = models.Manager()
+    in_stock = InstockManager()
 
     class Meta:
         ordering = ('-upload',)

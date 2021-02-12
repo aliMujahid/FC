@@ -1,4 +1,5 @@
 {% load bootstrap4 %}
+{% load fcz_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +18,12 @@
 
     <body>
         <nav class="navbar bg-primary navbar-dark navbar-expand-md mb-4 border">
+            
             <a href="{% url 'fcz:index' %}" class="navbar-brand" >Famous Computer Zone</a>
+            <form class="form-inline" action="{% url 'fcz:search' %}" method="get">
+                {% bootstrap_form form %}
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
             <button class="navbar-toggler" type="button"
              data-toggle="collapse" data-target="#collapse_target"
              aria-expanded="false" aria-controls="collapse_target"

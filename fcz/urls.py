@@ -6,6 +6,7 @@ app_name = 'fcz'
 
 urlpatterns = [
     path('', views.index, name= 'index'),
+    path('search/', views.search, name='search'),
     path('<int:day>/<int:month>/<int:year>/<slug:product>/',\
                  views.product_detail, name='product_detail'),
     path('<slug:categ>/', views.category, name='category'),

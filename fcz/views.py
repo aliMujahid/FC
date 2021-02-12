@@ -1,14 +1,22 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import render,\
+                    get_object_or_404
+from django.core.paginator import Paginator,\
+             PageNotAnInteger, EmptyPage
+from django.contrib.postgres.search import \
+        SearchVector, SearchRank, SearchQuery
+
+
 
 from taggit.models import Tag
 
 from .models import Product, Categorie
+from .forms import SearchForm
 
 def index(request):
     categs = Categorie.objects.all()
-    all_products = Product.objects.filter(status='in_stock')
+    all_products = Product.in_stock.all()
     products = {}
+    #form, results = search(request)
     for categ in categs:
         tag = get_object_or_404(Tag, slug=categ.slug)
         products[categ.title]=all_products.filter(tags__in=[tag])
@@ -48,3 +56,21 @@ def product_detail(request, day, month, year, product):
 
     context = {'product':product, "features":features}
     return render(request, 'fcz/product_detail.html', context)
+
+def search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('name', 'tags')
+            results = Product.in_stock.annotate(
+                search = search_vector,
+            ).filter(search=query)
+            
+            
+    context = {'form':form, 'products':results}
+    return render(request, 'fcz/category.html', context)
